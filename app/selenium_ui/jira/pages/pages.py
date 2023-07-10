@@ -159,10 +159,8 @@ class Issue(BasePage):
         for data in data_suggestions:
             # 'Please select' is label in items list where all issue types are presented (not for current project)
             if 'Please select' not in str(data):
-                items = data['items']
-                for label in items:
-                    if label['label'] not in issue_types:
-                        issue_types[label['label']] = label['selected']
+                if data['label'] not in issue_types:
+                    issue_types[data['label']] = data['selected']
         if 'Epic' in issue_types:
             if issue_types['Epic']:
 
