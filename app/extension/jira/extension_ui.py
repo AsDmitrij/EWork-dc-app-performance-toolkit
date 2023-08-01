@@ -14,7 +14,7 @@ create_project_option_id = 'com.epam.ework.jira.ework-integration-qa:create-ewor
 
 def check_create_project_option(webdriver):
     page = BasePage(webdriver)
-    issue_key = 'DEMO-25'
+    issue_key = 'ATES-635'
 
     @print_timing("selenium_view_issue:view_create_project_option")
     def measure():
@@ -30,6 +30,7 @@ def check_project_creation(webdriver):
     issue_modal.open_create_issue_modal()
     issue_modal.fill_summary_create()
     issue_modal.fill_description_create(rte_status)
+    issue_modal.set_resolution()  # Set resolution if there is such field
     issue_modal.assign_to_me()
     issue_modal.submit_issue()
 
