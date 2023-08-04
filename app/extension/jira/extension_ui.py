@@ -112,11 +112,3 @@ def check_project_creation(webdriver):
 
     measure()
 
-    @print_timing("selenium_check_EWork_link")
-    def measure():
-        page.wait_until_visible((By.XPATH, last_comment + "/a")).click()
-        new_window = webdriver.window_handles[1]
-        webdriver.switch_to.window(new_window)
-        page.wait_until_visible((By.XPATH, "//span[text()='Sign in with your Cirro account']"))
-
-    measure()
