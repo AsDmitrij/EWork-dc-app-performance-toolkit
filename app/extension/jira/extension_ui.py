@@ -6,6 +6,7 @@ from selenium_ui.conftest import print_timing
 from selenium_ui.jira.pages.pages import Issue
 from util.conf import JIRA_SETTINGS
 from util.api.jira_clients import JiraRestClient
+import random
 
 client = JiraRestClient(JIRA_SETTINGS.server_url, JIRA_SETTINGS.admin_login, JIRA_SETTINGS.admin_password)
 rte_status = client.check_rte_status()
@@ -69,10 +70,11 @@ def check_project_creation(webdriver):
         @print_timing("selenium_create_project:add_instructions")
         def sub_measure():
             page.wait_until_visible((By.XPATH, "//trix-editor[@id='ework_trix-editor']")).send_keys("Description")
+            page.action_chains().move_to_element(page.get_element((By.XPATH, "//aui-select[@name='task_type']")))
             for i in range(5):
-                page.wait_until_visible((By.XPATH, "//aui-select[@name='task_type']")).click()
-                if len(page.get_elements((By.ID, "aui-uid-0-1"))) < 1:
-                    page.wait_until_visible((By.XPATH, "//aui-select[@name='task_type']")).click()
+                page.wait_until_clickable((By.XPATH, "//aui-select[@name='task_type']")).click()
+                if len(page.get_elements((By.CLASS_NAME, "aui-select-suggestion"))) < 1:
+                    page.wait_until_clickable((By.XPATH, "//aui-select[@name='task_type']")).click()
                 else:
                     break
             page.wait_until_visible((By.ID, "aui-uid-0-1")).click()
