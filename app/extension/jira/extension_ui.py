@@ -69,7 +69,12 @@ def check_project_creation(webdriver):
         @print_timing("selenium_create_project:add_instructions")
         def sub_measure():
             page.wait_until_visible((By.XPATH, "//trix-editor[@id='ework_trix-editor']")).send_keys("Description")
-            page.wait_until_visible((By.XPATH, "//aui-select[@name='task_type']")).click()
+            for i in range(5):
+                page.wait_until_visible((By.XPATH, "//aui-select[@name='task_type']")).click()
+                if len(page.get_elements((By.ID, "aui-uid-0-1"))) < 1:
+                    page.wait_until_visible((By.XPATH, "//aui-select[@name='task_type']")).click()
+                else:
+                    break
             page.wait_until_visible((By.ID, "aui-uid-0-1")).click()
             page.wait_until_visible((By.ID, next_step)).click()
 
@@ -111,4 +116,3 @@ def check_project_creation(webdriver):
         sub_measure()
 
     measure()
-
