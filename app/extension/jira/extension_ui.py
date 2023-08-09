@@ -1,4 +1,4 @@
-from selenium.common import ElementNotInteractableException
+from selenium.common import ElementNotInteractableException, TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
@@ -70,21 +70,25 @@ def check_project_creation(webdriver):
 
         @print_timing("selenium_create_project:add_instructions")
         def sub_measure():
-            page.wait_until_visible((By.XPATH, "//trix-editor[@id='ework_trix-editor']")).send_keys("Description")
             for i in range(5):
                 try:
-                    page.action_chains().move_to_element(page.get_element((By.XPATH, "//aui-select[@name='task_type']")))
+                    page.wait_until_visible((By.XPATH, "//trix-editor[@id='ework_trix-editor']")).send_keys("Description")
                     for j in range(5):
-                        page.wait_until_clickable((By.XPATH, "//aui-select[@name='task_type']")).click()
-                        if len(page.get_elements((By.CLASS_NAME, "aui-select-suggestion"))) < 1:
-                            page.wait_until_clickable((By.XPATH, "//aui-select[@name='task_type']")).click()
-                        else:
+                        try:
+                            page.action_chains().move_to_element(page.get_element((By.XPATH, "//aui-select[@name='task_type']")))
+                            for k in range(5):
+                                page.wait_until_clickable((By.XPATH, "//aui-select[@name='task_type']")).click()
+                                if len(page.get_elements((By.CLASS_NAME, "aui-select-suggestion"))) < 1:
+                                    page.wait_until_clickable((By.XPATH, "//aui-select[@name='task_type']")).click()
+                                else:
+                                    break
+                            page.wait_until_visible((By.ID, "aui-uid-0-1"))
+                            page.wait_until_clickable((By.ID, "aui-uid-0-1")).click()
                             break
-                    page.wait_until_visible((By.ID, "aui-uid-0-1"))
-                    page.wait_until_clickable((By.ID, "aui-uid-0-1")).click()
-                    break
-                except ElementNotInteractableException:
-                    print('ElementNotInteractableException handled')
+                        except ElementNotInteractableException:
+                            print('ElementNotInteractableException handled')
+                except TimeoutException:
+                    print('TimeoutException handled')
             page.wait_until_visible((By.ID, next_step)).click()
 
         sub_measure()
