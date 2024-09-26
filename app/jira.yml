@@ -17,7 +17,7 @@ settings:
     test_duration: 3m
     ramp-up: 3s                        # time to spin all concurrent users
     total_actions_per_hour: 5450      # number of total JMeter/Locust actions per hour
-    WEBDRIVER_VISIBLE: True
+    WEBDRIVER_VISIBLE: False
     JMETER_VERSION: 5.6.3
     LANGUAGE: en_US.utf8
     allow_analytics: Yes               # Allow sending basic run analytics to Atlassian. These analytics help us to understand how the tool is being used and help us to continue to invest in this tooling. For more details please see our README.
@@ -115,7 +115,7 @@ modules:
       httpsampler.ignore_failed_embedded_resources: "true"
   selenium:
     chromedriver:
-      version: "128.0.6613.137" # Supports Chrome version 128. You can refer to https://googlechromelabs.github.io/chrome-for-testing
+      version: "129.0.6668.59" # Supports Chrome version 128. You can refer to https://googlechromelabs.github.io/chrome-for-testing
 reporting:
 - data-source: sample-labels
   module: junit-xml
