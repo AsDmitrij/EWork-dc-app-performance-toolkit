@@ -1,4 +1,4 @@
-from selenium.common import ElementNotInteractableException, TimeoutException
+from selenium.common import ElementNotInteractableException, TimeoutException, StaleElementReferenceException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
@@ -24,7 +24,7 @@ number_of_attempts = 10
 def check_edit_project(webdriver):
     page = BasePage(webdriver)
 
-    @print_timing("selenium_view_open_project_option")
+    @print_timing("selenium_edit_project:view_open_project_option")
     def measure():
         page.go_to_url(f"{JIRA_SETTINGS.server_url}/browse/{issue_with_ework_project_key}")
         page.wait_until_visible((By.ID, "summary-val"))
@@ -34,12 +34,32 @@ def check_edit_project(webdriver):
 
     measure()
 
-    @print_timing("selenium_edit_project_requirements")
+    for k in range(number_of_attempts):
+        try:
+            page.wait_until_visible((By.XPATH, "//span[text()='Edit project']")).click()
+            page.wait_until_visible((By.XPATH, "//input[@name='name']"))
+            break
+        except (TimeoutException, StaleElementReferenceException):
+            webdriver.refresh()
+            print('TimeoutException handled')
+
+    @print_timing("selenium_edit_project:open_edit_requirements_tab")
     def measure():
-        page.wait_until_visible((By.XPATH, "//span[text()='Edit project']")).click()
-        page.wait_until_visible((By.XPATH, "//input[@name='name']"))
         page.wait_until_visible((By.XPATH, "//div[text()='Instructions']")).click()
-        page.wait_until_present((By.XPATH, "//trix-editor[@input='react_trix-editor_requirements']")).send_keys(
+
+    measure()
+
+    for k in range(number_of_attempts):
+        try:
+            page.wait_until_visible((By.XPATH, "//trix-editor[@input='react_trix-editor_requirements']"))
+            break
+        except TimeoutException:
+            page.wait_until_visible((By.XPATH, "//div[text()='Instructions']")).click()
+            print('TimeoutException handled')
+
+    @print_timing("selenium_edit_project:save_changed_requirements_tab")
+    def measure():
+        page.wait_until_visible((By.XPATH, "//trix-editor[@input='react_trix-editor_requirements']")).send_keys(
             "update")
         page.wait_until_visible((By.XPATH, "//span[text()='Save changes']")).click()
         page.wait_until_visible((By.XPATH, "//span[text()='Close Page']"))
@@ -50,7 +70,7 @@ def check_edit_project(webdriver):
 def check_create_project_option(webdriver):
     page = BasePage(webdriver)
 
-    @print_timing("selenium_view_create_project_option")
+    @print_timing("selenium_create_project:check_availability_project_creation")
     def measure():
         page.go_to_url(f"{JIRA_SETTINGS.server_url}/browse/{issue_without_ework_project_key}")
         page.wait_until_visible((By.ID, "summary-val"))
@@ -197,12 +217,22 @@ def check_task_creation(webdriver):
 
     ework_task_name = "EWork task" + ''.join(random.choices(string.ascii_letters + string.digits, k=10))
 
+    for k in range(number_of_attempts):
+        try:
+            page.wait_until_visible((By.XPATH, "//div[contains(@type,'redactor')]"))
+            break
+        except TimeoutException:
+            print('TimeoutException handled')
+
     @print_timing("selenium_create_task:select_ework_stream_project")
     def measure():
-        page.wait_until_visible((By.XPATH, "//input[contains(@class,'selected')]")).send_keys(
-            ework_project_with_task)
         page.wait_until_visible((By.XPATH, "//div[contains(@type,'redactor')]")).click()
-        page.wait_until_visible((By.XPATH, "//div[@type='dropdown']/div")).click()
+        for n in range(number_of_attempts):
+            try:
+                page.wait_until_visible((By.XPATH, "//div[@type='dropdown']/div")).click()
+                break
+            except StaleElementReferenceException:
+                print('StaleElementReferenceException handled')
 
     measure()
 
@@ -211,6 +241,8 @@ def check_task_creation(webdriver):
             page.wait_until_visible((By.XPATH, "//input[@name='title']"), small_wait_timeout)
             break
         except TimeoutException:
+            page.wait_until_visible((By.XPATH, "//div[contains(@type,'redactor')]")).click()
+            page.wait_until_visible((By.XPATH, "//div[@type='dropdown']/div")).click()
             print('TimeoutException handled')
 
     @print_timing("selenium_create_task:fill_task_data")

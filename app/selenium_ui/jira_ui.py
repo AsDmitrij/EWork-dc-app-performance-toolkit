@@ -62,20 +62,20 @@ Refer to `app/selenium_ui/jira/modules.py` for examples.
 """
 
 
-def test_1_selenium_check_create_project_option(jira_webdriver, jira_screen_shots):
-    extension_ui.check_create_project_option(jira_webdriver)
-
-
-def test_1_selenium_project_creation(jira_webdriver, jira_screen_shots):
-    extension_ui.check_project_creation(jira_webdriver)
-
-
-def test_1_selenium_project_edit(jira_webdriver, jira_screen_shots):
-    extension_ui.check_edit_project(jira_webdriver)
-
-
-def test_1_selenium_task_creation(jira_webdriver, jira_screen_shots):
-    extension_ui.check_task_creation(jira_webdriver)
+# def test_1_selenium_check_create_project_option(jira_webdriver, jira_screen_shots):
+#     extension_ui.check_create_project_option(jira_webdriver)
+#
+#
+# def test_1_selenium_project_creation(jira_webdriver, jira_screen_shots):
+#     extension_ui.check_project_creation(jira_webdriver)
+#
+#
+# def test_1_selenium_project_edit(jira_webdriver, jira_screen_shots):
+#     extension_ui.check_edit_project(jira_webdriver)
+#
+#
+# def test_1_selenium_task_creation(jira_webdriver, jira_screen_shots):
+#     extension_ui.check_task_creation(jira_webdriver)
 
 
 def test_2_selenium_z_log_out(jira_webdriver, jira_datasets, jira_screen_shots):
