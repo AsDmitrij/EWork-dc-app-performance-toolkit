@@ -13,8 +13,8 @@ import string
 client = JiraRestClient(JIRA_SETTINGS.server_url, JIRA_SETTINGS.admin_login, JIRA_SETTINGS.admin_password)
 rte_status = client.check_rte_status()
 create_project_option_id = 'com.epam.ework.jira.ework-integration-qa:ework-project-button_create'
-issue_without_ework_project_key = 'DT-14'
-issue_with_ework_project_key = 'DT-48'
+issue_without_ework_project_key = 'AANES-504'
+issue_with_ework_project_key = 'AANES-503'
 ework_project_with_task = 'AUTO_STREAM'
 wait_timeout = 5
 small_wait_timeout = 50
